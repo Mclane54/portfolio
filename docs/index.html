@@ -11,21 +11,33 @@
     gtag('js', new Date());
     gtag('config', 'G-RLBQV5YKZ5');
   </script>
+
   <script>
   function calculateExperience(startDate) {
     const start = new Date(startDate);
     const now = new Date();
-    
-    let years = now.getFullYear() - start.getFullYear();
-    let months = now.getMonth() - start.getMonth();
 
-    if (months < 0) {
-      years -= 1;
-      months += 12;
+    // Whole years between start year and the year before the current year
+    let fullYears = now.getFullYear() - start.getFullYear() - 1;
+
+    // Months from the start year (after start month) to end of that year
+    let startYearMonths = 12 - (start.getMonth() + 1); 
+    startYearMonths += 1; // Include the start month itself
+
+    // Months in the current year
+    let currentYearMonths = now.getMonth() + 1; // Since getMonth() is zero-based
+
+    // Total extra months outside the full years
+    let totalExtraMonths = startYearMonths + currentYearMonths;
+
+    // If totalExtraMonths >= 12, convert extra months into years
+    if (totalExtraMonths >= 12) {
+      fullYears += Math.floor(totalExtraMonths / 12);
+      totalExtraMonths = totalExtraMonths % 12;
     }
 
-    const total = years + months / 12;
-    return total.toFixed(1); // e.g., "2.7"
+    // Return formatted as X.Y (e.g., 3.9)
+    return `${fullYears}.${totalExtraMonths}`;
   }
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -33,6 +45,7 @@
     document.getElementById("experience").innerText = `${experience} years`;
   });
 </script>
+  
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const jobs = document.querySelectorAll(".job");
